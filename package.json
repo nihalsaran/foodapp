@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/cli-doctor": "^11.3.6",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-firebase/app": "^18.3.0",
     "@react-native-firebase/firestore": "^18.3.0",
