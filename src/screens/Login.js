@@ -1,19 +1,52 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
+import firestore from '@react-native-firebase/firestore';
 
-const Login = () => {
+const Login = ({navigation}) => {
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+
+  const adminLogin = async () => {
+    const users = await firestore().collection('admin').get();
+    console.log(users.password + "  " + password)
+    if (email == users.docs[0]._data.email &&
+      password == users.docs[0]._data.password) {
+      navigation.navigate('Dashboard');
+    }
+    else {
+      alert("Wrong email and password")
+    }
+
+  };
   return (
     <View style={styles.container}>
 
       <Text style={styles.title}>
         Admin Login
       </Text>
-      <TextInput style={styles.inputStyle} placeholder={'Enter Email Id'} />
-      <TextInput style={styles.inputStyle} placeholder={'Enter password'}/>
-      <TouchableOpacity style={styles.loginbtn}>
+      <TextInput style={styles.inputStyle} placeholder={'Enter Email Id'}
+        value={email}
+        onChangeText={txt => setEmail(txt)} />
+      <TextInput style={styles.inputStyle} placeholder={'Enter password'}
+        value={password}
+        onChangeText={txt => setPassword(txt)}
+      />
+      <TouchableOpacity style={styles.loginbtn} onPress={() => {
+
+        if (email !== '' && password !== '') {
+          adminLogin()
+        }
+        else {
+          alert("Please enter data");
+        }
+
+
+      }}>
         <Text style={styles.btnText}>
-         Login 
+          Login
         </Text>
 
       </TouchableOpacity>
@@ -33,7 +66,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#000',
     marginTop: 200,
-    
+
     alignSelf: 'center',
 
   },
@@ -49,24 +82,24 @@ const styles = StyleSheet.create({
 
   },
 
-  loginbtn:{
-    backgroundColor:'orange',
-    width:'90%',
+  loginbtn: {
+    backgroundColor: 'orange',
+    width: '90%',
     height: 50,
-    alignSelf:'center',
+    alignSelf: 'center',
     borderRadius: 10,
     marginTop: 50,
     justifyContent: 'center',
-    alignItems:'center',
+    alignItems: 'center',
 
 
 
   },
 
-  btnText:{
+  btnText: {
     fontSize: 18,
     fontWeight: "600",
-    color: '#000',  
+    color: '#000',
   }
 
 
